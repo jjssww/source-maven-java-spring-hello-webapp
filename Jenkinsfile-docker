@@ -10,7 +10,7 @@ pipeline {
                 docker { image 'maven:3-eclipse-temurin-21' }
             }
             steps {
-                git branch: 'main', url: 'https://github.com/jjssww/source-maven-java-spring-hello-webapp.git' // 실제 Git 저장소 주소로 변경
+                git branch: 'main', url: 'https://github.com/stevesj/source-maven-java-spring-hello-webapp.git' // 실제 Git 저장소 주소로 변경
             }
         }
         stage('Test Application') {
@@ -40,8 +40,8 @@ pipeline {
         stage('Tag Container Image') {
             agent { label 'controller' }
             steps {
-                sh 'docker image tag testimg jjssww/mytomat:v${BUILD_NUMBER}' // 빌드 번호 태그 지정
-                sh 'docker image tag testimg jjssww/mytomcat:latest' // latest 태그 지정
+                sh 'docker image tag testimg stevesj/mytomat:v${BUILD_NUMBER}' // 빌드 번호 태그 지정
+                sh 'docker image tag testimg stevesjmytomcat:latest' // latest 태그 지정
             }
         }
         stage('Push Container Image') {
@@ -49,8 +49,8 @@ pipeline {
             steps {
                 // Jenkins에 저장한 자격 증명으로 Docker Hub에 인증합니다.
                 withDockerRegistry(credentialsId: 'docker-registry-credential', url: 'https://index.docker.io/v1/') {
-                    sh 'docker image push jjssww/mytomcat:v${BUILD_NUMBER}' // 빌드 번호 태그 이미지 업로드
-                    sh 'docker image push jjssww/mytomcat:latest' // latest 태그 이미지 업로드
+                    sh 'docker image push stevesj/mytomcat:v${BUILD_NUMBER}' // 빌드 번호 태그 이미지 업로드
+                    sh 'docker image push stevesj/mytomcat:latest' // latest 태그 이미지 업로드
                 }
             }
         }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 // 이미지를 백그라운드로 실행하고 호스트 80번 포트를 컨테이너 8080번에 연결합니다.
                 // 꺾쇠 괄호의 값은 실제 컨테이너 이름, 이미지 이름, 빌드 번호로 변경합니다.
-                sh 'docker container run --detach --name mytomcat -p 80:8080 jjssww/mytomcat:latest'
+                sh 'docker container run --detach --name mytomcat -p 80:8080 stevesj/mytomcat:latest'
             }
         }
     }
