@@ -2,6 +2,7 @@ pipeline {
     agent {
         label "jenkins-node"
     }
+    #triggers { pollSCM(0 12 */2 * *) }
     stages {
         stage('checkout') {
             steps {
