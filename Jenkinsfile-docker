@@ -59,7 +59,7 @@ pipeline {
                 // 이미지를 백그라운드로 실행하고 호스트 80번 포트를 컨테이너 8080번에 연결합니다.
                 // latest 태그의 이미지를 사용합니다.
                 // sh 'docker container run --detach --name mytomcat -p 80:8080 stevesj/mytomcat:latest'
-              	ansiblePlatbook(playbook: 'container-playbook.yaml') 
+              	ansiblePlaybook(playbook: 'container-playbook.yaml') 
             }
         }
     }
