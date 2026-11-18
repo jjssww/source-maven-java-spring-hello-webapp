@@ -9,7 +9,7 @@ pipeline {
                 docker { image 'maven:3-eclipse-temurin-21' }
             }
             steps {
-                git branch: 'main', url: 'https://github.com/stevesj/source-maven-java-spring-hello-webapp.git' // 실제 Git 저장소 주소로 변경
+                git branch: 'main', url: 'https://github.com/jjssww/source-maven-java-spring-hello-webapp.git' // 실제 Git 저장소 주소로 변경
             }
         }
         stage('Test Application') {
