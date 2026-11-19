@@ -29,21 +29,23 @@ spec:
 '''
     }
   }
+
   environment {
-    REGISTRY    = 'docker.io'
-    USERNAME    = 'stevesj'
-    IMAGE_NAME  = 'k8s-tomcat'
-    DOCKERFILE  = 'Dockerfile'
-    IMAGE_TAG   = "{REGISTRY}/{USERNAME}/{IMAGE_NAME}"
+    REGISTRY   = 'docker.io'
+    USERNAME   = 'stevesj'
+    IMAGE_NAME = 'k8s-tomcat'
+    DOCKERFILE = 'Dockerfile'
   }
+
   stages {
     stage('Checkout') {
       steps {
         container('maven') {
-          git branch: 'main', url: 'https://github.com/nobreak-labs/source-maven-java-spring-hello-webapp.git'
+          git branch: 'main', url: 'https://github.com/jjssww/source-maven-java-spring-hello-webapp.git'
         }
       }
     }
+
     stage('Test Application') {
       steps {
         container('maven') {
@@ -51,6 +53,7 @@ spec:
         }
       }
     }
+
     stage('Build Application') {
       steps {
         container('maven') {
@@ -58,24 +61,28 @@ spec:
         }
       }
     }
+
     stage('Build Container Image') {
       steps {
         container('buildah') {
-          sh """
-            buildah build -f{DOCKERFILE} \
-              -t {IMAGE_TAG}:{BUILD_NUMBER} \
-              -t {IMAGE_TAG}:latest .
-          """
+          sh '''
+            IMAGE_TAG="${REGISTRY}/${USERNAME}/${IMAGE_NAME}"
+            buildah build -f "${DOCKERFILE}" \
+              -t "${IMAGE_TAG}:${BUILD_NUMBER}" \
+              -t "${IMAGE_TAG}:latest" .
+          '''
         }
       }
     }
+
     stage('Push Container Image') {
       steps {
         container('buildah') {
-          sh """
-            buildah push{IMAGE_TAG}:{BUILD_NUMBER}
-            buildah push{IMAGE_TAG}:latest
-          """
+          sh '''
+            IMAGE_TAG="${REGISTRY}/${USERNAME}/${IMAGE_NAME}"
+            buildah push "${IMAGE_TAG}:${BUILD_NUMBER}"
+            buildah push "${IMAGE_TAG}:latest"
+          '''
         }
       }
     }
